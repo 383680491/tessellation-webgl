@@ -104,7 +104,9 @@ if (Parameters.debugMode) {
             Page.Demopage.setErrorMessage("worker-not-supported", "Your browser does not the multithreaded mode because it does not support Web Workers.");
         }
 
+        //模拟器
         const simulation = new SimulationMultithreaded();
+        //绘图
         const plotter = new PlotterWebGLBasic();
         main<typeof plotter>(simulation, plotter);
     } else {

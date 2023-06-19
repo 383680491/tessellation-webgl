@@ -21,7 +21,7 @@ interface IUploadedVboPart extends IVboPart {
 
 // VBO when it is only on GPU side
 interface IUploadedVbo<T extends IUploadedVboPart> {
-    readonly id: WebGLBuffer;
+    readonly id: WebGLBuffer|null;
     vboParts: T[];
 }
 

@@ -2,7 +2,7 @@ class TreeNode {
     private readonly children: TreeNode[] = [];
 
     private subDepthsCache: TreeNode[][] = [];
-    private parent: TreeNode = null;
+    private parent: TreeNode|null = null;
 
     public treeDepth(): number {
         if (this.children.length > 0) {
