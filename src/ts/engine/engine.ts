@@ -198,7 +198,7 @@ abstract class Engine {
             for (const primitive of lastLayer.primitives.items) {
                 primitive.subdivide(subdivisionBalance, colorVariation);
                 Array.prototype.push.apply(primitivesOfNewLayer.items, primitive.getDirectChildren() as PrimitiveBase[]);
-                outlinesOfNewLayer.items.push(primitive.subdivision);
+                primitive.subdivision && outlinesOfNewLayer.items.push(primitive.subdivision);
             }
 
             this.layers.push({
@@ -263,7 +263,7 @@ abstract class Engine {
             } else {
                 const primitivesOfParentLayer = this.layers[iLayer - 1].primitives;
                 for (const primitive of primitivesOfParentLayer.items) {
-                    reparsedLayerOutlines.push(primitive.subdivision);
+                    primitive.subdivision && reparsedLayerOutlines.push(primitive.subdivision);
                 }
             }
             this.layers[iLayer].outlines.items = reparsedLayerOutlines;

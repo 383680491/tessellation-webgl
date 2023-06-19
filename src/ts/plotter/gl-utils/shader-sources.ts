@@ -27,7 +27,7 @@ function loadSource(filename: string, callback: LoadCallback): void {
             callbacks: [callback],
             failed: false,
             pending: true,
-            text: null,
+            text: "",
         };
         const cached = cachedSources[filename];
 

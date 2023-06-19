@@ -219,7 +219,7 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
                     // console.log("Sending update command");
                     this.lastCommandSendingTimestamp = performance.now();
                     this.isAwaitingCommandResult = true;
-                    MessagesToWorker.PerformUpdate.sendMessage(this.worker, this.cumulatedZoom, command.viewport, command.wantedDepth, command.subdivisionBalance, command.colorVariation);
+                    command && MessagesToWorker.PerformUpdate.sendMessage(this.worker, this.cumulatedZoom, command.viewport, command.wantedDepth, command.subdivisionBalance, command.colorVariation);
                 });
             }
         }
