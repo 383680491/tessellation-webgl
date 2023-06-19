@@ -4,7 +4,7 @@ import "../page-interface-generated";
 
 
 abstract class PlotterCanvas {
-    protected readonly canvas: HTMLCanvasElement;
+    protected readonly canvas: HTMLCanvasElement|null;
     protected readonly cssPixel: number;
 
     private _width: number;
@@ -30,16 +30,19 @@ abstract class PlotterCanvas {
     }
 
     public resizeCanvas(): void {
-        const actualWidth = Math.floor(this.cssPixel * this.canvas.clientWidth);
-        const actualHeight = Math.floor(this.cssPixel * this.canvas.clientHeight);
-
-        if (this.canvas.width !== actualWidth || this.canvas.height !== actualHeight) {
-            this.canvas.width = actualWidth;
-            this.canvas.height = actualHeight;
+        if(this.canvas)
+        {
+            const actualWidth = Math.floor(this.cssPixel * this.canvas.clientWidth);
+            const actualHeight = Math.floor(this.cssPixel * this.canvas.clientHeight);
+    
+            if (this.canvas.width !== actualWidth || this.canvas.height !== actualHeight) {
+                this.canvas.width = actualWidth;
+                this.canvas.height = actualHeight;
+            }
+    
+            this._width = this.canvas.width;
+            this._height = this.canvas.height;
         }
-
-        this._width = this.canvas.width;
-        this._height = this.canvas.height;
     }
 }
 

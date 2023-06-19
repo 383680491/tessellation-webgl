@@ -161,10 +161,15 @@ class PlotterWebGLBasic extends PlotterCanvas {
         super();
 
         const webglFlags = {
+            //透明通道
             alpha: false,
+            //抗锯齿
             antialias: true,
+            //深度
             depth: false,
+            //模板
             stencil: false,
+            //是否需要保留绘图缓存,如果不需要则释放内存获得更高性能
             preserveDrawingBuffer: false,
         };
         if (!GLCanvas.initGL(webglFlags)) {
@@ -355,16 +360,25 @@ class PlotterWebGLBasic extends PlotterCanvas {
             (vboPart1.alpha === vboPart2.alpha);
     }
 
+    /**
+     * 加载shader文件
+     * @param vertexFilename 
+     * @param fragmentFilename 
+     * @param callback 
+     */
     private static asyncLoadShader(vertexFilename: string, fragmentFilename: string, callback: (shader: Shader) => unknown): void {
         const id = `${vertexFilename}__${fragmentFilename}__${Math.random()}`;
 
+        //show loading UI  
         Loader.registerLoadingObject(id);
 
+        //加载资源 并返回Shader对象
         ShaderManager.buildShader({
             fragmentFilename,
             vertexFilename,
             injected: {},
         }, (builtShader: Shader | null) => {
+            //close loading UI  
             Loader.registerLoadedObject(id);
 
             if (builtShader !== null) {

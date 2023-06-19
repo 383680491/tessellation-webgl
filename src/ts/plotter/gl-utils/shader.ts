@@ -121,14 +121,14 @@ const types: { [index: string]: IBindingType } = {
 };
 
 interface IShaderUniform {
-    value: boolean | boolean[] | number | number[] | WebGLTexture | WebGLTexture[];
-    loc: WebGLUniformLocation;
+    value: boolean | boolean[] | number | number[] | WebGLTexture | WebGLTexture[] | null;
+    loc: WebGLUniformLocation|null;
     size: number;
     type: number;
 }
 
 interface IShaderAttribute {
-    VBO: VBO;
+    VBO: VBO|null;
     loc: GLint;
     size: number;
     type: number;
@@ -138,22 +138,25 @@ class ShaderProgram extends GLResource {
     public u: { [name: string]: IShaderUniform };
     public a: { [name: string]: IShaderAttribute };
 
-    private id: WebGLProgram;
+    private id: WebGLProgram|null;
     private uCount: number;
     private aCount: number;
 
     constructor(gl: WebGLRenderingContext, vertexSource: string, fragmentSource: string) {
-        function createShader(type: GLenum, source: string): WebGLShader {
+        function createShader(type: GLenum, source: string): WebGLShader|null {
             const shader = gl.createShader(type);
-            gl.shaderSource(shader, source);
-            gl.compileShader(shader);
-
-            const compileSuccess = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-            if (!compileSuccess) {
-                console.error(gl.getShaderInfoLog(shader));
-                console.log(source);
-                gl.deleteShader(shader);
-                return null;
+            if(shader)
+            {
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+    
+                const compileSuccess = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+                if (!compileSuccess) {
+                    console.error(gl.getShaderInfoLog(shader));
+                    console.log(source);
+                    gl.deleteShader(shader);
+                    return null;
+                }
             }
 
             return shader;
@@ -169,18 +172,21 @@ class ShaderProgram extends GLResource {
         const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentSource);
 
         const id = gl.createProgram();
-        gl.attachShader(id, vertexShader);
-        gl.attachShader(id, fragmentShader);
-        gl.linkProgram(id);
-
-        const linkSuccess = gl.getProgramParameter(id, gl.LINK_STATUS);
-        if (!linkSuccess) {
-            console.error(gl.getProgramInfoLog(id));
-            gl.deleteProgram(id);
-        } else {
-            this.id = id;
-
-            this.introspection();
+        if(id)
+        {
+            vertexShader && gl.attachShader(id, vertexShader);
+            fragmentShader && gl.attachShader(id, fragmentShader);
+            gl.linkProgram(id);
+    
+            const linkSuccess = gl.getProgramParameter(id, gl.LINK_STATUS);
+            if (!linkSuccess) {
+                console.error(gl.getProgramInfoLog(id));
+                gl.deleteProgram(id);
+            } else {
+                this.id = id;
+    
+                this.introspection();
+            }
         }
     }
 
@@ -228,32 +234,41 @@ class ShaderProgram extends GLResource {
     private introspection(): void {
         const gl = super.gl();
 
-        this.uCount = gl.getProgramParameter(this.id, gl.ACTIVE_UNIFORMS);
-        this.u = {};
-        for (let i = 0; i < this.uCount; i++) {
-            const uniform = gl.getActiveUniform(this.id, i);
-            const name = uniform.name;
-
-            this.u[name] = {
-                loc: gl.getUniformLocation(this.id, name),
-                size: uniform.size,
-                type: uniform.type,
-                value: null,
-            };
-        }
-
-        this.aCount = gl.getProgramParameter(this.id, gl.ACTIVE_ATTRIBUTES);
-        this.a = {};
-        for (let i = 0; i < this.aCount; i++) {
-            const attribute = gl.getActiveAttrib(this.id, i);
-            const name = attribute.name;
-
-            this.a[name] = {
-                VBO: null,
-                loc: gl.getAttribLocation(this.id, name),
-                size: attribute.size,
-                type: attribute.type,
-            };
+        if(this.id)
+        {
+            this.uCount = gl.getProgramParameter(this.id, gl.ACTIVE_UNIFORMS);
+            this.u = {};
+            for (let i = 0; i < this.uCount; i++) {
+                const uniform = gl.getActiveUniform(this.id, i);
+                if(uniform)
+                {
+                    const name = uniform.name;
+    
+                    this.u[name] = {
+                        loc: gl.getUniformLocation(this.id, name),
+                        size: uniform.size,
+                        type: uniform.type,
+                        value: null,
+                    };
+                }
+            }
+    
+            this.aCount = gl.getProgramParameter(this.id, gl.ACTIVE_ATTRIBUTES);
+            this.a = {};
+            for (let i = 0; i < this.aCount; i++) {
+                const attribute = gl.getActiveAttrib(this.id, i);
+                if(attribute)
+                {
+                    const name = attribute.name;
+    
+                    this.a[name] = {
+                        VBO: null,
+                        loc: gl.getAttribLocation(this.id, name),
+                        size: attribute.size,
+                        type: attribute.type,
+                    };
+                }
+            }
         }
     }
 }

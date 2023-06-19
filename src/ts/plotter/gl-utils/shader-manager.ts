@@ -46,7 +46,7 @@ function buildShader(infos: IShaderInfos, callback: BuildCallback): void {
         }
 
         if (sourcesPending === 0) {
-            let shader = null;
+            let shader:Shader|null = null;
 
             if (sourcesFailed === 0) {
                 const vert = ShaderSources.getSource(infos.vertexFilename);
@@ -104,9 +104,7 @@ function registerShader(name: string, infos: IShaderInfos, callback: RegisterCal
 
 function deleteShader(name: string): void {
     if (typeof cachedShaders[name] !== "undefined") {
-        if (cachedShaders[name].shader !== null) {
-            cachedShaders[name].shader.freeGLResources();
-        }
+        cachedShaders[name].shader && (cachedShaders[name].shader?.freeGLResources())
         delete cachedShaders[name];
     }
 }
