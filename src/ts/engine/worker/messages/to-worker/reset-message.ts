@@ -10,6 +10,12 @@ interface IMessageData {
     readonly primitiveType: EPrimitiveType;
 }
 
+/**
+ * 发送消息给wok
+ * @param worker 
+ * @param viewport 
+ * @param primitiveType 
+ */
 function sendMessage(worker: Worker, viewport: Rectangle, primitiveType: EPrimitiveType): void {
     const messageData: IMessageData = {
         viewport,
@@ -19,6 +25,10 @@ function sendMessage(worker: Worker, viewport: Rectangle, primitiveType: EPrimit
     sendMessageToWorker(worker, verb, messageData);
 }
 
+/**
+ * 监听从worker 回来的消息
+ * @param listener 
+ */
 function addListener(listener: (viewport: Rectangle, primitiveType: EPrimitiveType) => unknown): void {
     addListenerFromWorker(verb, (data: IMessageData) => {
         const viewport = Rectangle.rehydrate(data.viewport);

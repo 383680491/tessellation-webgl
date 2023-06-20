@@ -41,6 +41,7 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
     private cumulatedZoom: Zoom = Zoom.noZoom();
 
     private lastCommandSendingTimestamp: number = 0;
+    /**  处理多线程之间的状态机 确保两个线程task来回一致 */
     private isAwaitingCommandResult: boolean = false;
 
     private pendingResetCommand: PendingResetCommand | null = null;
@@ -54,7 +55,7 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
     public constructor() {
         this.worker = new Worker(`script/worker.js?v=${Page.version}`);
 
-        // 统计
+        // 统计  work logic   work 线程执行这些逻辑
         MessagesFromWorker.NewMetrics.addListener(this.worker, (engineMetrics: IEngineMetrics) => {
             updateEngineMetricsIndicators(engineMetrics);
         });
@@ -194,6 +195,9 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
         MessagesToWorker.DownloadAsSvg.sendMessage(this.worker, width, height, scaling, backgroundColor, linesColor);
     }
 
+    /**
+     * 让worker线程执行耗时的逻辑，且确保发送指令->完成指令->接到反馈，避免相同指令多次分发
+     */
     private sendNextCommand(): void {
         if (!this.isAwaitingCommandResult) {
             if (this.pendingResetCommand) {
