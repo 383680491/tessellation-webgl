@@ -5,6 +5,10 @@ interface IEngineMetrics {
     segmentsCount: number;
 }
 
+/**
+ * 统计stat
+ * @param metrics 
+ */
 function updateEngineMetricsIndicators(metrics: IEngineMetrics): void {
     Page.Canvas.setIndicatorText("tree-depth", metrics.treeDepth.toString());
     Page.Canvas.setIndicatorText("primitives-count", metrics.lastLayerPrimitivesCount.toString());

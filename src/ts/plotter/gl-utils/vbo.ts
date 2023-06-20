@@ -17,7 +17,7 @@ class VBO extends GLResource {
         return new VBO(gl, new Float32Array(vert), 2, gl.FLOAT, true);
     }
 
-    private id: WebGLBuffer;
+    private id: WebGLBuffer|null;
     private size: number;
     private type: GLenum;
     private normalize: GLboolean;

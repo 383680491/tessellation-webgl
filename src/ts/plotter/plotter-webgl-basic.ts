@@ -217,6 +217,7 @@ class PlotterWebGLBasic extends PlotterCanvas {
         gl.clearColor(backgroundColor.r / 255, backgroundColor.g / 255, backgroundColor.b / 255, 1);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
+        // zoom 三角面 偏移和缩放      scaling 屏幕缩放
         const zoomTranslate = zoom.translate;
         const zoomAndScalingAsUniform = [zoom.scale, zoomTranslate.x, zoomTranslate.y, scaling];
         this.shaderLines.u["uZoom"].value = zoomAndScalingAsUniform;

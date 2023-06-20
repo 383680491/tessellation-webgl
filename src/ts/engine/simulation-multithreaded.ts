@@ -54,14 +54,17 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
     public constructor() {
         this.worker = new Worker(`script/worker.js?v=${Page.version}`);
 
+        // 统计
         MessagesFromWorker.NewMetrics.addListener(this.worker, (engineMetrics: IEngineMetrics) => {
             updateEngineMetricsIndicators(engineMetrics);
         });
 
+        // 导出svg
         MessagesFromWorker.DownloadAsSvgOutput.addListener(this.worker, (output: string) => {
             downloadSvgOutput(output);
         });
 
+        // 
         MessagesFromWorker.ResetOutput.addListener(this.worker, (polygonsVboBuffer: IVboBuffer, linesVboBuffer: IVboBuffer) => {
             this.cumulatedZoom = Zoom.noZoom();
             this.polygonsVboBuffer = polygonsVboBuffer;

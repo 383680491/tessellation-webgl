@@ -24,6 +24,10 @@ function downloadTextFile(fileName: string, content: string): void {
     }
 }
 
+/**
+ * 导出svg
+ * @param output 
+ */
 function downloadSvgOutput(output: string): void {
     downloadTextFile("tessellation.svg", output);
 }
@@ -59,20 +63,23 @@ function setQueryStringValue(name: string, value: string | null): void {
         }
         window.location.search = params.toString();
     } else { // IE11
-        const paramsArray = window.location.search.split("&");
-        const paramToAdd = `${name}=${encodeURIComponent(value)}`;
-        let paramAlreadyExists = false;
-        for (let i = 0; i < paramsArray.length; i++) {
-            if (paramsArray[i].indexOf(name + "=") === 0) {
-                paramsArray[i] = paramToAdd;
-                paramAlreadyExists = true;
-                break;
+        if(value)
+        {
+            const paramsArray = window.location.search.split("&");
+            const paramToAdd = `${name}=${encodeURIComponent(value)}`;
+            let paramAlreadyExists = false;
+            for (let i = 0; i < paramsArray.length; i++) {
+                if (paramsArray[i].indexOf(name + "=") === 0) {
+                    paramsArray[i] = paramToAdd;
+                    paramAlreadyExists = true;
+                    break;
+                }
             }
+            if (!paramAlreadyExists) {
+                paramsArray.push(paramToAdd);
+            }
+            window.location.search = paramsArray.join("&");
         }
-        if (!paramAlreadyExists) {
-            paramsArray.push(paramToAdd);
-        }
-        window.location.search = paramsArray.join("&");
     }
 }
 

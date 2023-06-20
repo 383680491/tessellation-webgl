@@ -8,6 +8,7 @@ enum EVerb {
     PERFORM_UPDATE = "perform-update",
     PERFORM_UPDATE_OUTPUT = "perform-update-output",
     PERFORM_UPDATE_NO_OUTPUT = "perform-update-no-output",
+    //新的测量？？？？
     NEW_METRICS = "new-metrics",
 }
 
@@ -24,6 +25,12 @@ function sendMessage<TData>(target: any, verb: EVerb, data: TData, transfer?: Tr
     target.postMessage(messageData, transfer);
 }
 
+/**
+ * 添加事件监听
+ * @param context  worker
+ * @param verb 
+ * @param callback 
+ */
 function addListener<TData>(context: any, verb: EVerb, callback: (data: TData) => unknown): void {
     context.addEventListener("message", (event: MessageEvent) => {
         if (event && event.data.verb === verb) {
