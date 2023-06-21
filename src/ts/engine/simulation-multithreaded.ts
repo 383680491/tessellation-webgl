@@ -46,7 +46,9 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
 
     private pendingResetCommand: PendingResetCommand | null = null;
     private pendingRecomputeColorsCommand: PendingRecomputeColorsCommand | null = null;
+    /** 结合 节流  100ms才执行一次 该指令 */
     private pendingPerformUpdateCommand: PendingPerformUpdateCommand | null = null;
+    /** 执行节流 */
     private readonly performUpdateCommandThrottle: Throttle = new Throttle(100);
 
     private lastLayerBirthTimestamp: number = 0;
