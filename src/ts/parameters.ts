@@ -64,26 +64,44 @@ abstract class Parameters {
     public static readonly multithreaded: boolean = !isMonothreaded();
     public static readonly plotter: EPlotter = getPlotter();
 
+    /**
+     * 图元类型 面片  三角形
+     */
     public static get primitiveType(): EPrimitiveType {
         return Page.Tabs.getValues(controlId.PRIMITIVE_TABS_ID)[0] as EPrimitiveType;
     }
 
+    /**
+     * 值越小 则拆分的阈值 越小，即三角形越多
+     */
     public static get depth(): number {
         return Page.Range.getValue(controlId.DENSITY_RANGE_ID);
     }
 
+    /**
+     * 切分三角形 值为1的时候为最长边的中点和顶点，值越小 越随机
+     */
     public static get balance(): number {
         return Page.Range.getValue(controlId.BALANCE_RANGE_ID);
     }
 
+    /**
+     * primitive 放大的速度
+     */
     public static get zoomingSpeed(): number {
         return Page.Range.getValue(controlId.ZOOMING_SPEED_RANGE_ID);
     }
 
+    /**
+     * 视口渲染的范围
+     */
     public static get scaling(): number {
         return Page.Range.getValue(controlId.SCALING_RANGE_ID);
     }
 
+    /**
+     * 颜色变化
+     */
     public static get colorVariation(): number {
         return 255 * Page.Range.getValue(controlId.COLOR_VARIATION_RANGE_ID);
     }
