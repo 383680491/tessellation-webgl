@@ -83,8 +83,11 @@ abstract class Engine {
         let somethingChanged = false;
 
         const viewportAfterZoom = viewport.computeNewRectangleAfterZoom(zoomToApply);
+        // 基于视口 裁剪 重新整理tree
         somethingChanged = this.handleRecycling(viewportAfterZoom) || somethingChanged;
+        // 将图元顶点数据基于zoom 递归偏移
         somethingChanged = this.applyZoom(zoomToApply) || somethingChanged;
+        // 拆分图元，创建新的layer
         somethingChanged = this.adjustLayersCount(wantedDepth, subdivisionBalance, colorVariation) || somethingChanged;
 
         if (somethingChanged) {
@@ -104,7 +107,9 @@ abstract class Engine {
     private computeMetrics(): IEngineMetrics {
         const treeDepth = this.rootPrimitive.treeDepth();
         const lastLayerPrimitivesCount = this.layers[this.layers.length - 1].primitives.items.length;
+        // 图元数量
         let totalPrimitivesCount = 0;
+        // 线段数量
         let segmentsCount = 0;
 
         for (const layer of this.layers) {
@@ -161,6 +166,11 @@ abstract class Engine {
         return appliedZoom;
     }
 
+    /**
+     * 处理回收
+     * @param viewport 
+     * @returns 
+     */
     private handleRecycling(viewport: Rectangle): boolean {
         if (this.rootPrimitive.computeVisibility(viewport) === EVisibility.OUT_OF_VIEW) {
             this.reset(viewport, this.primitiveType);
@@ -178,6 +188,13 @@ abstract class Engine {
         }
     }
 
+    /**
+     * 创建new layer    拆分 图元
+     * @param wantedDepth 
+     * @param subdivisionBalance 
+     * @param colorVariation 
+     * @returns 
+     */
     private adjustLayersCount(wantedDepth: number, subdivisionBalance: number, colorVariation: number): boolean {
         const lastLayer = this.layers[this.layers.length - 1];
         const idealPrimitivesCountForLastLayer = Math.pow(2, wantedDepth - 1);
@@ -196,6 +213,7 @@ abstract class Engine {
             };
 
             for (const primitive of lastLayer.primitives.items) {
+                //拆封图元
                 primitive.subdivide(subdivisionBalance, colorVariation);
                 Array.prototype.push.apply(primitivesOfNewLayer.items, primitive.getDirectChildren() as PrimitiveBase[]);
                 primitive.subdivision && outlinesOfNewLayer.items.push(primitive.subdivision);
@@ -219,6 +237,10 @@ abstract class Engine {
         return true;
     }
 
+    /**
+     * 如果root 图元只有一个子节点，则删除root，使用子节点作为新的图元
+     * @returns 
+     */
     private changeRootPrimitiveIfNeeded(): boolean {
         let changedSomething = false;
         let directChildrenOfRoot = this.rootPrimitive.getDirectChildren();
@@ -231,6 +253,12 @@ abstract class Engine {
         return changedSomething;
     }
 
+    /**
+     * 修剪图元
+     * @param primitive 
+     * @param viewport 
+     * @returns 
+     */
     private prunePrimitivesOutOfView(primitive: PrimitiveBase, viewport: Rectangle): boolean {
         let changedSomething = false;
 
@@ -251,6 +279,10 @@ abstract class Engine {
         return changedSomething;
     }
 
+    /**
+     * 重新构建集合
+     * 修建图元后 重新整理数据
+     */
     private rebuildLayersCollections(): void {
         for (let iLayer = 0; iLayer < this.layers.length; iLayer++) {
             const reparsedLayerPrimitives = this.rootPrimitive.getChildrenOfDepth(iLayer) as PrimitiveBase[];

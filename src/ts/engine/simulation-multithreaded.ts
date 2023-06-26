@@ -59,6 +59,7 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
 
         // 统计  work logic   work 线程执行这些逻辑
         MessagesFromWorker.NewMetrics.addListener(this.worker, (engineMetrics: IEngineMetrics) => {
+            //更新UI指标属性 
             updateEngineMetricsIndicators(engineMetrics);
         });
 
@@ -228,6 +229,7 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
                     // console.log("Sending update command");
                     this.lastCommandSendingTimestamp = performance.now();
                     this.isAwaitingCommandResult = true;
+                    //perform 执行   执行更新 这个调度就是主线程   用多线程send listen模型   
                     command && MessagesToWorker.PerformUpdate.sendMessage(this.worker, this.cumulatedZoom, command.viewport, command.wantedDepth, command.subdivisionBalance, command.colorVariation);
                 });
             }

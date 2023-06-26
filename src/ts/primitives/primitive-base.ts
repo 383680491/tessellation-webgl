@@ -18,7 +18,7 @@ enum EVisibility {
 
 abstract class PrimitiveBase extends TreeNode implements IPolygon {
     public abstract readonly primitiveType: EPrimitiveType;
-
+    //细分 图元拆分中间的line
     public subdivision: Line | null = null;
     protected _color: Color;
 
@@ -49,6 +49,10 @@ abstract class PrimitiveBase extends TreeNode implements IPolygon {
         this.subdivision = null;
     }
 
+    /**
+     * draw line  ABCA    A-B   B-C   C-A
+     * @returns 
+     */
     public getOutline(): Line {
         const result = this.vertices;
         result.push(result[0]);
@@ -64,6 +68,11 @@ abstract class PrimitiveBase extends TreeNode implements IPolygon {
         }
     }
 
+    /**
+     * 拆分图元
+     * @param subdivisionBalance 
+     * @param childrenColorVariation 
+     */
     public abstract subdivide(subdivisionBalance: number, childrenColorVariation: number): void;
     public abstract get vertices(): IPoint[];
 

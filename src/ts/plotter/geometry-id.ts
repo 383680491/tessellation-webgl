@@ -5,6 +5,11 @@ class GeometryId {
         return new GeometryId(nextFreeId++, 0);
     }
 
+    /**
+     * dehydrated   重新激活”或“重新实现动态行为
+     * @param dehydrated 
+     * @returns 
+     */
     public static rehydrate(dehydrated: GeometryId): GeometryId {
         return new GeometryId(dehydrated.id, dehydrated.version);
     }

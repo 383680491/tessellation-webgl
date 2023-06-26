@@ -8,7 +8,7 @@ enum EVerb {
     PERFORM_UPDATE = "perform-update",
     PERFORM_UPDATE_OUTPUT = "perform-update-output",
     PERFORM_UPDATE_NO_OUTPUT = "perform-update-no-output",
-    //新的测量？？？？
+    //显示UI的 图元、线段、深度 命令
     NEW_METRICS = "new-metrics",
 }
 
@@ -59,6 +59,12 @@ function addListenerToWorker<TData>(worker: Worker, verb: EVerb, callback: (data
     addListener<TData>(worker, verb, callback);
 }
 
+/**
+ * 主线程 发送 子线程
+ * @param verb 
+ * @param data 
+ * @param transfer 
+ */
 function sendMessageFromWorker<TData>(verb: EVerb, data: TData, transfer?: Transferable[]): void {
     sendMessage<TData>(self, verb, data, transfer);
 }

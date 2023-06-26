@@ -4,6 +4,10 @@ class TreeNode {
     private subDepthsCache: TreeNode[][] = [];
     private parent: TreeNode|null = null;
 
+    /**
+     * 根节点为1  
+     * @returns 
+     */
     public treeDepth(): number {
         if (this.children.length > 0) {
             return this.children[0].treeDepth() + 1;

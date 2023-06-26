@@ -35,6 +35,7 @@ class WorkerEngine extends Engine {
 
     public performUpdate(zoomToApply: Zoom, viewport: Rectangle, wantedDepth: number, subdivisionBalance: number, colorVariation: number): boolean {
         const lastLayerIdPreUpdate = this.layers[this.layers.length - 1].primitives.geometryId.id;
+        // 整理树节点   拆分图元  创建新的layer    修改primitives.geometryId.id
         const changedSomething = super.performUpdate(zoomToApply, viewport, wantedDepth, subdivisionBalance, colorVariation);
         const lastLayerIdPostUpdate = this.layers[this.layers.length - 1].primitives.geometryId.id;
 

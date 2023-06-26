@@ -22,14 +22,25 @@ class PrimitiveTriangles extends PrimitiveBase {
         return 2;
     }
 
+    /**
+     * 拆分成两个三角形
+     * @param subdivisionBalance 
+     * @param childrenColorVariation 
+     */
     public subdivide(subdivisionBalance: number, childrenColorVariation: number): void {
         this.removeChildren();
 
+        /**
+         * @param sourcePoint  最长边对面的顶点
+         * @param otherPoint1  最长边顶点1
+         * @param otherPoint2  最长边顶点2
+         */
         const subdivideInternal = (sourcePoint: IPoint, otherPoint1: IPoint, otherPoint2: IPoint) => {
             const minRand = 0.5 * subdivisionBalance;
             const maxRand = 1 - minRand;
             const rand = Arithmetics.random(minRand, maxRand);
 
+            // 获得两点连线的一个点
             this.subdivision = [
                 sourcePoint,
                 Arithmetics.interpolatePoint(otherPoint1, otherPoint2, rand),
@@ -45,6 +56,7 @@ class PrimitiveTriangles extends PrimitiveBase {
         const distance23 = Arithmetics.squaredDistance(this.p2, this.p3);
         const distance31 = Arithmetics.squaredDistance(this.p3, this.p1);
 
+        // 判断最长边
         if (distance12 > distance23 && distance12 > distance31) {
             subdivideInternal(this.p3, this.p1, this.p2);
         } else if (distance23 > distance12 && distance23 > distance31) {
@@ -58,13 +70,19 @@ class PrimitiveTriangles extends PrimitiveBase {
         return [this.p1, this.p2, this.p3];
     }
 
+    /**
+     * 将图元 顶点 基于zoom矩阵进行调整
+     * @param zoom 
+     * @param isRoot 
+     */
     protected applyZoom(zoom: Zoom, isRoot: boolean): void {
         if (isRoot) {
             zoom.applyToPoint(this.p1);
             zoom.applyToPoint(this.p2);
             zoom.applyToPoint(this.p3);
         }
-
+        
+        //图元拆分的line
         if (this.subdivision) {
             zoom.applyToPoint(this.subdivision[1]);
         }

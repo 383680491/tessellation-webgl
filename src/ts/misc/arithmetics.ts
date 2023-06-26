@@ -13,6 +13,13 @@ function interpolate(a: number, b: number, x: number): number {
     return (1 - x) * a + x * b;
 }
 
+/**
+ * 两点基于x 混合  类似 mix
+ * @param p1 
+ * @param p2 
+ * @param x 
+ * @returns 
+ */
 function interpolatePoint(p1: IPoint, p2: IPoint, x: number): IPoint {
     return {
         x: interpolate(p1.x, p2.x, x),
