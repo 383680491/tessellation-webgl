@@ -6,7 +6,9 @@ import { Zoom } from "../misc/zoom";
 import { EVisibility, PrimitiveBase } from "./primitive-base";
 import { EPrimitiveType } from "./primitive-type-enum";
 
-
+/**
+ * 基于最长边 获得一个点  分割为2个三角形
+ */
 class PrimitiveTriangles extends PrimitiveBase {
     public readonly primitiveType: EPrimitiveType = EPrimitiveType.TRIANGLES;
 

@@ -8,7 +8,7 @@ import { WorkerEngine } from "./worker-engine";
 
 const engine = new WorkerEngine();
 
-//主线程
+//这里是子线程逻辑
 MessagesFromMain.PerformUpdate.addListener((zoomToApply: Zoom, viewport: Rectangle, wantedDepth: number, subdivisionBalance: number, colorVariation: number) => {
     engine.performUpdate(zoomToApply, viewport, wantedDepth, subdivisionBalance, colorVariation);
 });

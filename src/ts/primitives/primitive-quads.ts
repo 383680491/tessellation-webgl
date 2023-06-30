@@ -6,7 +6,9 @@ import { Zoom } from "../misc/zoom";
 import { EVisibility, PrimitiveBase } from "./primitive-base";
 import { EPrimitiveType } from "./primitive-type-enum";
 
-
+/**
+ * 分成两个四边形
+ */
 class PrimitiveQuads extends PrimitiveBase {
     public readonly primitiveType: EPrimitiveType = EPrimitiveType.QUADS;
 

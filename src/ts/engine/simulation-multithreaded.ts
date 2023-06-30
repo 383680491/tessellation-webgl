@@ -55,6 +55,10 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
     private layersCount: number = 0;
 
     public constructor() {
+        /**
+         * scriptURL 指Worker线程要执行的脚本路径。
+         * 使用?v=${Page.version}添加版本号这是一种常见的技巧,用于在每个新版本更新后让浏览器重新加载Worker脚本,如果版本更新，浏览器会认为这是一个新的脚本,会重新加载它
+         */
         this.worker = new Worker(`script/worker.js?v=${Page.version}`);
 
         // 统计  work logic   work 线程执行这些逻辑
@@ -229,7 +233,7 @@ class SimulationMultithreaded implements ISimulation<PlotterWebGLBasic> {
                     // console.log("Sending update command");
                     this.lastCommandSendingTimestamp = performance.now();
                     this.isAwaitingCommandResult = true;
-                    //perform 执行   执行更新 这个调度就是主线程   用多线程send listen模型   
+                    //在子线程执行，如何判断代码执行是在主线程还是子线程，通过断点 查看 window，子线程window是空，这个是给子线程发送指令
                     command && MessagesToWorker.PerformUpdate.sendMessage(this.worker, this.cumulatedZoom, command.viewport, command.wantedDepth, command.subdivisionBalance, command.colorVariation);
                 });
             }

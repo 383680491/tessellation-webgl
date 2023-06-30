@@ -5,7 +5,9 @@ import { Zoom } from "../misc/zoom";
 import { PrimitiveTriangles } from "./primitive-triangles";
 import { EPrimitiveType } from "./primitive-type-enum";
 
-
+/**
+ * nested 嵌套 一个三角形 基于每条边随机获得一个点，然后分成4个三角形
+ */
 class PrimitiveTrianglesNested extends PrimitiveTriangles {
     public readonly primitiveType: EPrimitiveType = EPrimitiveType.NESTED_TRIANGLES;
 
